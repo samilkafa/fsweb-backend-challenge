@@ -10,6 +10,7 @@ const morgan = require("morgan");
 server.use(helmet());       // 3rd party middleware
 server.use(cors());         // 3rd party middleware
 server.use(morgan("dev"));  // 3rd party middleware
+server.use(express.json()); // build-in middleware
 
 // 3. routers
 server.get("/", (req, res) => {
@@ -17,7 +18,11 @@ server.get("/", (req, res) => {
   });
 
 // 4. error middlwares
-
+server.use((err, req, res, next) => {
+  res
+      .status(err.status || 500)
+      .json({message: err.message || "Server error!..."})
+});
 
 // 5. exports
 module.exports = server;
